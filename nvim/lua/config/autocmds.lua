@@ -16,3 +16,4 @@ require("overseer").setup({
 })
 require("overseer").enable_dap()
 require("toggleterm").setup({})
+require("oil").setup()
