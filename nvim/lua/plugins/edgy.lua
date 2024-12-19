@@ -22,13 +22,7 @@ return {
       local opts = {
         bottom = {
           { title = "DAP Repl", ft = "dap-repl", size = { height = 15 }, pinned = true },
-          {
-            ft = "toggleterm",
-            size = { height = 17 },
-            filter = function(buf, win)
-              return vim.api.nvim_win_get_config(win).relative == ""
-            end,
-          },
+          { title = "DAP Console", ft = "dap-console", size = { height = 15 }, pinned = true },
           { title = "Neotest Summary", ft = "neotest-summary" },
         },
         left = {
