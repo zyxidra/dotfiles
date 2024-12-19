@@ -8,6 +8,7 @@ return {
       {
         elements = {
           { id = "repl", size = 0.05 }, -- 50% of the total height
+          { id = "console", size = 0.05 }, -- 50% of the total height
         },
         size = 55,
         position = "right",

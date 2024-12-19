@@ -21,8 +21,8 @@ return {
     opts = function()
       local opts = {
         bottom = {
-          { title = "DAP Repl", ft = "dap-repl", size = { height = 15 }, pinned = true },
-          { title = "DAP Console", ft = "dap-console", size = { height = 15 }, pinned = true },
+          { title = "DAP Repl", ft = "dap-repl", size = { height = 15 } },
+          { title = "DAP Console", ft = "dapui_console", size = { height = 15 } },
           { title = "Neotest Summary", ft = "neotest-summary" },
         },
         left = {
