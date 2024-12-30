@@ -38,6 +38,7 @@ return {
               "pwa-msedge",
               "pwa-extensionHost",
               "node-terminal",
+              "node"
             },
 
             -- Path for file logging

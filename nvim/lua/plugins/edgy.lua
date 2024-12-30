@@ -22,10 +22,22 @@ return {
       local opts = {
         bottom = {
           { title = "DAP Repl", ft = "dap-repl", size = { height = 15 } },
-          { title = "DAP Console", ft = "dapui_console", size = { height = 15 } },
-          { title = "Neotest Summary", ft = "neotest-summary" },
+          {
+            title = "Terminal",              -- Adding the terminal section here
+            ft = "toggleterm",
+            size = { height = 15 },          -- Adjust the height of the terminal window
+            content = function()
+              require('toggleterm').toggle() -- Toggles the terminal
+            end
+          },
         },
         left = {
+          { title = "DAP Scope",       ft = "dapui_scopes",      size = { width = 50 } },
+          { title = "Neotest Summary", ft = "neotest-summary" },
+          { title = "DAP Breakpoint",  ft = "dapui_breakpoints", size = { width = 50 } },
+          { title = "DAP Stack",       ft = "dapui_stacks",      size = { width = 50 } },
+        },
+        right = {
           {
             ft = "help",
             size = { height = 14, width = 100 },
@@ -34,7 +46,6 @@ return {
             end,
           },
         },
-        right = {},
         keys = {
           -- Resize bindings
           ["<c-Right>"] = function(win)

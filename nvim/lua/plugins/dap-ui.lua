@@ -8,10 +8,19 @@ return {
       {
         elements = {
           { id = "repl", size = 0.05 }, -- 50% of the total height
-          { id = "console", size = 0.05 }, -- 50% of the total height
         },
         size = 55,
-        position = "right",
+        position = "bottom",
+      },
+      {
+        elements = {
+          -- These elements will be displayed in this layout
+          { id = "scopes", size = 0.25 },
+          { id = "breakpoints", size = 0.25 },
+          { id = "stacks", size = 0.25 },
+        },
+        size = 40, -- Width of the layout (for `right` or `left`)
+        position = "left", -- Can be "left" or "right"
       },
     },
   },
