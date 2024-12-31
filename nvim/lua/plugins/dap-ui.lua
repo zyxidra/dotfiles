@@ -7,7 +7,7 @@ return {
     layouts = {
       {
         elements = {
-          { id = "repl", size = 0.05 }, -- 50% of the total height
+          { id = "repl", size = 0.05 },   -- 50% of the total height
         },
         size = 55,
         position = "bottom",
@@ -15,11 +15,11 @@ return {
       {
         elements = {
           -- These elements will be displayed in this layout
-          { id = "scopes", size = 0.25 },
+          { id = "scopes",      size = 0.25 },
           { id = "breakpoints", size = 0.25 },
-          { id = "stacks", size = 0.25 },
+          { id = "stacks",      size = 0.25 },
         },
-        size = 40, -- Width of the layout (for `right` or `left`)
+        size = 40,         -- Width of the layout (for `right` or `left`)
         position = "left", -- Can be "left" or "right"
       },
     },

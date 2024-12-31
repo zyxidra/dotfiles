@@ -10,51 +10,6 @@ return {
         version = "1.*",
       },
       {
-        "mxsdev/nvim-dap-vscode-js",
-        dependencies = {
-          "microsoft/vscode-js-debug",
-          version = "1.x",
-          build = "npm i && npm run compile vsDebugServerBundle && mv dist out",
-        },
-        config = function()
-          local dap = require("dap")
-          --local utils = require 'dap.utils'
-          local dap_js = require("dap-vscode-js")
-          --local mason = require 'mason-registry'
-
-          ---@diagnostic disable-next-line: missing-fields
-          dap_js.setup({
-            -- debugger_path = mason.get_package('js-debug-adapter'):get_install_path(),
-            debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
-            adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
-          })
-
-          local langs = { "javascript", "typescript", "svelte", "astro" }
-          for _, lang in ipairs(langs) do
-            dap.configurations[lang] = {
-              {
-                type = "pwa-node",
-                request = "attach",
-                name = "Attach debugger to existing `node --inspect` process",
-                cwd = "${workspaceFolder}",
-                skipFiles = {
-                  "${workspaceFolder}/node_modules/**/*.js",
-                  "${workspaceFolder}/packages/**/node_modules/**/*.js",
-                  "${workspaceFolder}/packages/**/**/node_modules/**/*.js",
-                  "<node_internals>/**",
-                  "node_modules/**",
-                },
-                sourceMaps = true,
-                resolveSourceMapLocations = {
-                  "${workspaceFolder}/**",
-                  "!**/node_modules/**",
-                },
-              },
-            }
-          end
-        end,
-      },
-      {
         "Joakker/lua-json5",
         build = "./install.sh",
       },
@@ -63,73 +18,26 @@ return {
       require("overseer").enable_dap()
     end,
     config = function()
-      local js_based_languages = {
-        "typescript",
-        "javascript",
-        "typescriptreact",
-        "javascriptreact",
-        "vue",
-      }
       local dap = require("dap")
-      for _, language in ipairs(js_based_languages) do
-        dap.configurations[language] = {
-          -- Debug single nodejs files
-          {
-            type = "pwa-node",
-            request = "launch",
-            name = "Launch file",
-            program = "${file}",
-            cwd = vim.fn.getcwd(),
-            sourceMaps = true,
-          },
-          -- Debug nodejs processes (make sure to add --inspect when you run the process)
-          {
-            type = "pwa-node",
-            request = "attach",
-            name = "Attach",
-            processId = require("dap.utils").pick_process,
-            cwd = vim.fn.getcwd(),
-            sourceMaps = true,
-          },
-          -- Debug web applications (client side)
-          {
-            type = "pwa-chrome",
-            request = "launch",
-            name = "Launch & Debug Chrome",
-            url = function()
-              local co = coroutine.running()
-              return coroutine.create(function()
-                vim.ui.input({
-                  prompt = "Enter URL: ",
-                  default = "http://localhost:3000",
-                }, function(url)
-                  if url == nil or url == "" then
-                    return
-                  else
-                    coroutine.resume(co, url)
-                  end
-                end)
-              end)
-            end,
-            webRoot = vim.fn.getcwd(),
-            protocol = "inspector",
-            sourceMaps = true,
-            userDataDir = false,
-          },
-          -- Divider for the launch.json derived configs
-          {
-            name = "----- ↓ launch.json configs ↓ -----",
-            type = "",
-            request = "launch",
+
+      dap.adapters["pwa-node"] = {
+        type = "server",
+        host = "localhost",
+        port = "${port}",
+        executable = {
+          command = 'js-debug-adapter',
+          args = {
+            '${port}',
           },
         }
-      end
+      }
 
       dap.adapters.cppdbg = {
         id = "cppdbg",
         type = "executable",
         command = vim.fn.stdpath("data") .. "/mason/bin/OpenDebugAD7", -- if you use mason
       }
+
       dap.configurations.cpp = {
         {
           name = "Launch file",
@@ -208,7 +116,6 @@ return {
       -- Optional: Set up debugging keybindings
       vim.fn.sign_define("DapBreakpoint", { text = "🟥", texthl = "", linehl = "", numhl = "" })
       vim.fn.sign_define("DapStopped", { text = "➡️", texthl = "", linehl = "", numhl = "" })
-      require("dap.ext.vscode").load_launchjs()
     end,
   },
 }
