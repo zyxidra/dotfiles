@@ -4,8 +4,6 @@
 vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("x", "d", '"_d', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("x", "<leader>p", '"_dP', { noremap = true, silent = true })
-vim.api.nvim_set_keymap("n", "<S-s>", "<S-$>", { noremap = true })
-vim.api.nvim_set_keymap("n", "<S-a>", "<S-^>", { noremap = true })
 vim.api.nvim_set_keymap("n", "d", '"_d', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("n", "<C-c>", '"+y', { noremap = true, silent = true })
 vim.api.nvim_set_keymap("v", "<C-c>", '"+y', { noremap = true, silent = true })
