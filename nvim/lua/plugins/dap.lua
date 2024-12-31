@@ -1,10 +1,3 @@
-local js_based_languages = {
-  "typescript",
-  "javascript",
-  "typescriptreact",
-  "javascriptreact",
-  "vue",
-}
 return {
   {
     "mfussenegger/nvim-dap",
@@ -18,38 +11,47 @@ return {
       },
       {
         "mxsdev/nvim-dap-vscode-js",
+        dependencies = {
+          "microsoft/vscode-js-debug",
+          version = "1.x",
+          build = "npm i && npm run compile vsDebugServerBundle && mv dist out",
+        },
         config = function()
+          local dap = require("dap")
+          --local utils = require 'dap.utils'
+          local dap_js = require("dap-vscode-js")
+          --local mason = require 'mason-registry'
+
           ---@diagnostic disable-next-line: missing-fields
-          require("dap-vscode-js").setup({
-            -- Path of node executable. Defaults to $NODE_PATH, and then "node"
-            -- node_path = "node",
-
-            -- Path to vscode-js-debug installation.
-            debugger_path = vim.fn.resolve(vim.fn.stdpath("data") .. "/lazy/vscode-js-debug"),
-
-            -- Command to use to launch the debug server. Takes precedence over "node_path" and "debugger_path"
-            -- debugger_cmd = { "js-debug-adapter" },
-
-            -- which adapters to register in nvim-dap
-            adapters = {
-              "chrome",
-              "pwa-node",
-              "pwa-chrome",
-              "pwa-msedge",
-              "pwa-extensionHost",
-              "node-terminal",
-              "node"
-            },
-
-            -- Path for file logging
-            -- log_file_path = "(stdpath cache)/dap_vscode_js.log",
-
-            -- Logging level for output to file. Set to false to disable logging.
-            -- log_file_level = false,
-
-            -- Logging level for output to console. Set to false to disable console output.
-            -- log_console_level = vim.log.levels.ERROR,
+          dap_js.setup({
+            -- debugger_path = mason.get_package('js-debug-adapter'):get_install_path(),
+            debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
+            adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
           })
+
+          local langs = { "javascript", "typescript", "svelte", "astro" }
+          for _, lang in ipairs(langs) do
+            dap.configurations[lang] = {
+              {
+                type = "pwa-node",
+                request = "attach",
+                name = "Attach debugger to existing `node --inspect` process",
+                cwd = "${workspaceFolder}",
+                skipFiles = {
+                  "${workspaceFolder}/node_modules/**/*.js",
+                  "${workspaceFolder}/packages/**/node_modules/**/*.js",
+                  "${workspaceFolder}/packages/**/**/node_modules/**/*.js",
+                  "<node_internals>/**",
+                  "node_modules/**",
+                },
+                sourceMaps = true,
+                resolveSourceMapLocations = {
+                  "${workspaceFolder}/**",
+                  "!**/node_modules/**",
+                },
+              },
+            }
+          end
         end,
       },
       {
@@ -61,6 +63,13 @@ return {
       require("overseer").enable_dap()
     end,
     config = function()
+      local js_based_languages = {
+        "typescript",
+        "javascript",
+        "typescriptreact",
+        "javascriptreact",
+        "vue",
+      }
       local dap = require("dap")
       for _, language in ipairs(js_based_languages) do
         dap.configurations[language] = {
